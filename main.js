@@ -6,6 +6,7 @@ const { app, BrowserWindow, Menu } = electron;
 
 // MAIN WINDOW
 let mainWindow;
+let addWindow;
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
@@ -27,35 +28,6 @@ const createWindow = () => {
     mainWindow = null;
   });
 };
-
-// MENU TEMPLATE
-// menu in Electron is just an array of objects
-const mainMenuTemplate = [
-  ...(process.platform === "darwin"
-    ? [
-        {
-          label: app.getName(),
-          submenu: [
-            { role: "about" },
-            { type: "separator" },
-            { role: "services" },
-            { type: "separator" },
-            { role: "hide" },
-            { role: "hideothers" },
-            { role: "unhide" },
-            { type: "separator" },
-            { role: "quit" }
-          ]
-        }
-      ]
-    : []),
-  {
-    label: "File",
-    submenu: [
-      process.platform === "darwin" ? { role: "close" } : { role: "quit" }
-    ]
-  }
-];
 
 // Listen for app to be ready
 app.on("ready", () => {
@@ -79,3 +51,71 @@ app.on("activate", () => {
     createWindow();
   }
 });
+
+// Handle create Add Window
+const createAddWindow = () => {
+  addWindow = new BrowserWindow({
+    parent: mainWindow,
+    width: 300,
+    height: 200,
+    title: "Add Shopping List Item",
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
+
+  // pass in file://dirname/mainWindow.html
+  addWindow.loadURL(
+    url.format({
+      pathname: path.join(__dirname, "addWindow.html"),
+      protocol: "file",
+      slashes: true
+    })
+  );
+
+  addWindow.on("closed", () => {
+    addWindow = null;
+  });
+
+  addWindow.show();
+  mainWindow.show();
+};
+
+// MENU TEMPLATE
+// menu in Electron is just an array of objects
+// by adding the empty to the menu, we can properly account for macOS menu quirks
+const mainMenuTemplate = [
+  ...(process.platform === "darwin"
+    ? [
+        {
+          label: app.getName(),
+          submenu: [
+            { role: "about" },
+            { type: "separator" },
+            { role: "services" },
+            { type: "separator" },
+            { role: "hide" },
+            { role: "hideothers" },
+            { role: "unhide" },
+            { type: "separator" },
+            { role: "quit" }
+          ]
+        }
+      ]
+    : []),
+  {
+    label: "File",
+    submenu: [
+      {
+        label: "Add Item",
+        click() {
+          createAddWindow();
+        }
+      },
+      {
+        label: "Clear Items"
+      },
+      process.platform === "darwin" ? { role: "close" } : { role: "quit" }
+    ]
+  }
+];

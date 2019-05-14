@@ -119,3 +119,22 @@ const mainMenuTemplate = [
     ]
   }
 ];
+
+// ACTIVATING DEV TOOLS
+if (process.env.NODE_ENV !== "production") {
+  mainMenuTemplate.push({
+    label: "DevTools",
+    submenu: [
+      {
+        label: "Toggle DevTools",
+        accelerator: process.platform === "darwin" ? "Command+I" : "Ctrl+I",
+        click(item, focusedWindow) {
+          focusedWindow.toggleDevTools();
+        }
+      },
+      {
+        role: "reload"
+      }
+    ]
+  });
+}

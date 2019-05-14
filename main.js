@@ -10,7 +10,10 @@ function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    icon: _dirname + "/img/sysinfo.png"
+    icon: __dirname + "/img/sysinfo.png",
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
   // load window with the index.html

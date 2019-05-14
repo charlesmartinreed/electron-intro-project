@@ -12,5 +12,22 @@
       </div>
       <button type="submit">Add Item</button>
     </form>
+    <script>
+        <!-- ipcRenderer is used to asynchronously communicate between renderer and main processes -->
+           const electron = require("electron");
+           const { ipcRenderer } = electron;
+
+        const form = document.querySelector('form');
+        form.addEventListener('submit', submitForm);
+
+        function submitForm(e) {
+        	e.preventDefault();
+      // grab item input and sent it to main.js via ipcRenderer
+      const item = document.querySelector('#item').value;
+
+      // give it a name, and the payload
+      ipcRenderer.send('item:add', item)
+        }
+    </script>
   </body>
 </html>

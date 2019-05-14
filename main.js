@@ -2,7 +2,8 @@ const electron = require("electron");
 const url = require("url");
 const path = require("path");
 
-const { app, BrowserWindow, Menu } = electron;
+// ipcMain is used to catch the payload sent by our renderer method
+const { app, BrowserWindow, Menu, ipcMain } = electron;
 
 // MAIN WINDOW
 let mainWindow;
@@ -81,6 +82,14 @@ const createAddWindow = () => {
   mainWindow.show();
 };
 
+// catch item:add
+ipcMain.on("item:add", function(e, item) {
+  //comes from addWindow, send to mainWindow
+  console.log(item);
+  mainWindow.webContents.send("item:add", item);
+  addWindow.close();
+});
+
 // MENU TEMPLATE
 // menu in Electron is just an array of objects
 // by adding the empty to the menu, we can properly account for macOS menu quirks
@@ -108,6 +117,8 @@ const mainMenuTemplate = [
     submenu: [
       {
         label: "Add Item",
+        accelerator:
+          process.platform === "darwin" ? "Command+Shift+N" : "Ctrl+Shift+N",
         click() {
           createAddWindow();
         }

@@ -11,15 +11,73 @@
       href="https://bootswatch.com/4/lux/bootstrap.min.css"
     />
     <title>Demo System Info App</title>
+    <style>
+      * {
+        padding-bottom: 20px;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
-      <h1>System Info</h1>
+      <h1 id="lead-text">System Info</h1>
       <div id="output"></div>
     </div>
   </body>
   <script>
     console.log(process);
+    let output = `
+              			<h2 class="page-header">App Version Data</h2>
+              			<ul class="list-group">
+              				<li class="list-group-item">Node: ${process.versions.node}</li>
+              				<li class="list-group-item">Electron: ${
+                        process.versions.electron
+                      }</li>
+              				<li class="list-group-item">Chrome: ${
+                        process.versions.chrome
+                      }</li>
+              			</ul>
+    
+              			<h2 class="page-header">System Specs</h2>
+              			<ul class="list-group">
+              				<li class="list-group-item">System Architecture: ${
+                        process.arch
+                      }</li>
+              				<li class="list-group-item">OS Version: ${
+                        process.env._system_version
+                      }</li>
+              				<li class="list-group-item">Printer: ${process.env.PRINTER}</li>
+              			</ul>
+    
+              			<h2 class="page-header">System Memory</h2>
+              			<ul class="list-group">
+              				<li class="list-group-item">Total: ${
+                        process.getSystemMemoryInfo().total
+                      } MB</li>
+              				<li class="list-group-item">Free: ${
+                        process.getSystemMemoryInfo().free
+                      } MB</li>
+              			</ul>
+    
+            				<h2 class="page-header">Computer Info</h2>
+              			<ul class="list-group">
+            					<li class="list-group-item">
+            						Computer Name: ${process.env.LOGNAME}
+            					</li>
+            					<li class="list-group-item">
+            						Username: ${process.env.USER}
+            					</li>
+            					<li class="list-group-item">
+            						Home Path: ${process.env.HOME}
+            					</li>
+            					<li class="list-group-item">
+            						System Drive: ${process.env.SYSTEMDRIVE}
+            					</li>
+            					<li class="list-group-item">
+            						System Root: ${process.env.SYSTEMROOT}
+            					</li>
+              			</ul>
+                		`;
+    document.getElementById("output").innerHTML = output;
   </script>
   <script>
     require("./renderer.js");

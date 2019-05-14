@@ -1,46 +1,81 @@
-const { app, BrowserWindow } = require("electron");
-const path = require("path");
+const electron = require("electron");
 const url = require("url");
+const path = require("path");
 
-// capture global ref to window object to keep electron app window open when JavaScript does its garbage collection
+const { app, BrowserWindow, Menu } = electron;
 
-let win; //would be an array if your app supports multi-windows
+// MAIN WINDOW
+let mainWindow;
 
-function createWindow() {
-  win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    icon: __dirname + "/img/sysinfo.png",
+const createWindow = () => {
+  mainWindow = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true
     }
   });
 
-  // load window with the index.html
-  win.loadFile("index.html");
+  // pass in file://dirname/mainWindow.html
+  mainWindow.loadURL(
+    url.format({
+      pathname: path.join(__dirname, "mainWindow.html"),
+      protocol: "file",
+      slashes: true
+    })
+  );
 
-  // open our devtools, in dev
-  win.webContents.openDevTools();
-
-  // check when the window is closed, set win to null
-  win.on("closed", () => {
-    win = null;
+  mainWindow.on("closed", () => {
+    mainWindow = null;
   });
-}
+};
 
-app.on("ready", createWindow);
+// MENU TEMPLATE
+// menu in Electron is just an array of objects
+const mainMenuTemplate = [
+  ...(process.platform === "darwin"
+    ? [
+        {
+          label: app.getName(),
+          submenu: [
+            { role: "about" },
+            { type: "separator" },
+            { role: "services" },
+            { type: "separator" },
+            { role: "hide" },
+            { role: "hideothers" },
+            { role: "unhide" },
+            { type: "separator" },
+            { role: "quit" }
+          ]
+        }
+      ]
+    : []),
+  {
+    label: "File",
+    submenu: [
+      process.platform === "darwin" ? { role: "close" } : { role: "quit" }
+    ]
+  }
+];
 
-// Quit app when all windows are closed
+// Listen for app to be ready
+app.on("ready", () => {
+  createWindow();
+
+  // Build out menu, using template defined below
+  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+
+  // Insert menu
+  Menu.setApplicationMenu(mainMenu);
+});
+
 app.on("window-all-closed", () => {
-  // check for macOS since the expected behavior is that an app will remain open even when windows are closed unless the user explictly quits the app
   if (process.platform !== "darwin") {
     app.quit();
   }
 });
 
 app.on("activate", () => {
-  // for macOS, re-create a window in the app when dock icon clicked and no other windows are open
-  if (win === null) {
+  if (mainWindow === null) {
     createWindow();
   }
 });

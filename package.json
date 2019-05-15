@@ -1,15 +1,20 @@
 {
-  "name": "elektron-intro",
+  "name": "electron-intro",
   "version": "1.0.0",
   "description": "Demo system monitor app",
+  "productName": "Electron Intro App",
   "main": "main.js",
   "repository": "git@github.com:charlesmartinreed/electron-intro-project.git",
   "author": "charlesmartinreed <charlesmartinreed@icloud.com>",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^5.0.1"
+    "electron": "^5.0.1",
+    "electron-packager": "^13.1.1"
   },
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Electron Intro App\"",
+    "package-linux": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds"
   }
 }

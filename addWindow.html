@@ -8,14 +8,19 @@
     />
   </head>
   <body>
-    <form>
-      <div>
-        <label>Enter Item</label>
-        <!-- gets focus as soon as window loads -->
-        <input type="text" id="item" autofocus />
-      </div>
-      <button type="submit">Add Item</button>
-    </form>
+    <div class="container">
+      <form>
+        <div>
+          <label>Enter Item</label>
+          <!-- gets focus as soon as window loads -->
+          <input type="text" id="item" autofocus />
+        </div>
+        <button class="btn waves-effect waves-light" type="submit">
+          Add Item
+        </button>
+      </form>
+    </div>
+
     <script>
         <!-- ipcRenderer is used to asynchronously communicate between renderer and main processes -->
            const electron = require("electron");

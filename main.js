@@ -5,6 +5,9 @@ const path = require("path");
 // ipcMain is used to catch the payload sent by our renderer method
 const { app, BrowserWindow, Menu, ipcMain } = electron;
 
+// set env variable
+process.env.NODE_ENV = "production";
+
 // MAIN WINDOW
 let mainWindow;
 let addWindow;

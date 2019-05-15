@@ -124,7 +124,12 @@ const mainMenuTemplate = [
         }
       },
       {
-        label: "Clear Items"
+        label: "Clear Items",
+        accelerator:
+          process.platform === "darwin" ? "Command+Shift+B" : "Ctrl+Shift+B",
+        click() {
+          mainWindow.webContents.send("item:clear");
+        }
       },
       process.platform === "darwin" ? { role: "close" } : { role: "quit" }
     ]
